@@ -1,12 +1,12 @@
 # Retreive sequences from the RTSF
 After sequencing is done, RTSF will notify you and send you a quality report file along with password and link to retreive the samples.
 
-You can use FileZilla or any other downloading tool or use the following command on HPCC:
+You can use FileZilla or any other downloading tools or use the following command on HPCC:
 ```
 wget -r -np -nH --ask- password ftps://shadea@titan.bch.msu.edu/20180420_16S-V4_ITS_PE
 ```
 
-The following steps are based on using Illumina PE sequencing platform and USEARCH for read processing.
+The following steps are based on using Illumina PE sequencing platform and USEARCH v10 for read processing.
 
 To use USEARCH you have two options:
 ```
@@ -14,7 +14,7 @@ To use USEARCH you have two options:
 2. /mnt/research/ShadeLab/WorkingSpace/usearch64 (copy to your working folder)  
 ```
 
-Creat several folders in your working foledr:
+Creat several folders in your working directory:
 ```
 mkdir logFiles
 mkdir QC
@@ -68,21 +68,34 @@ sed -i 's/Zotu/ZOTU/g' results/zotus_v1.fa
 
 ## OTU route
 
-### Step 6.2.1: Precluster sequences
+
+###  Step 6.2.1: Reference -based OTU picking (Using Silva database)
 ```
-./usearch64 -cluster_fast mergedFastq/nosigs_uniques_merged.fastq -centroids_fastq mergedFastq/denoised_nosigs_uniques_merged.fastq -id 0.9 -maxdiffs 5 -abskew 10 -sizein -sizeout -sort size
+./usearch64 -usearch_global mergedFastq/nosigs_uniques_merged.fastq -id 0.97 -db /mnt/research/ShadeLab/WorkingSpace/SILVA_128_QIIME_release/rep_set/rep_set_16S_only/97/97_otus_16S.fasta -strand plus -uc results/ref_seqs.uc -dbmatched results/closed_reference.fasta -notmatched results/failed_closed.fa
+```
+###  Step 6.2.2: De novo OTU clustering 
+
+```
+./usearch64 -sortbysize results/failed_closed.fa -fastaout results/sorted_failed_closed.fasta
+
+./usearch64 -cluster_otus results/sorted_failed_closed.fasta -minsize 2 -otus results/denovo_otus.fasta -relabel OTU_dn_ -uparseout results/denovo_otu.up --threads 40
 ```
 
-###  Step 6.2.2: Reference -based OTU picking (Using Silva database)
-```./usearch64 -usearch_global mergedFastq/denoised_nosigs_uniques_merged.fastq -id 0.97 -db /mnt/research/ShadeLab/WorkingSpace/SILVA_128_QIIME_release/rep_set/rep_set_16S_only/97/97_otus_16S.fasta  -strand plus -uc results/ref_seqs.uc -dbmatched results/closed_reference.fasta -notmatchedfq results/failed_closed.fq
+Combine both results using following command
+
+```
+cat results/closed_reference.fasta results/denovo_otus.fasta > results/full_rep_set.fasta
 ```
 
-### Step 7.2: Mapping the closed_reference.fasta to merged.fq (pre-dereplicated sequences) and make OTU table
+### Step 7.2: Mapping reads to OTUs
 ```
-./usearch64 -usearch_global mergedFastq/merged.fq -db results/closed_reference.fasta -strand plus -id 0.97 -uc results/OTU_map.uc -otutabout results/OTU_table.txt -biomout results/OTU_jsn.biom
+./usearch64 -usearch_global mergedFastq/merged.fq -db results/full_rep_set.fasta -strand plus -id 0.97 -uc results/OTU_map.uc -otutabout results/OTU_table.txt -biomout results/OTU_jsn.biom
 ```              
 
-## Using QIIME to assign taxonomy to the ZOTU/OTU table
+## Step 8: Assign taxonomy
+
+#### USEARCH
+It is possible to assign taxonomy with USEARCH using the sintax command, however the latest compatible version of SILVA is v123.
 
 ### ZOTUs
 ```
@@ -107,21 +120,18 @@ biom convert -i results/otu_table_tax_filt.biom -o results/otu_table_joined.txt 
 ```
 
 
-## Phylogenetic analysis
-### Align sequences to SILVA db using PyNAST
+## Phylogenetic analysis (needed for UniFrac)
 
-__ZOTUs__
+### Alignments using Muscle
+first you have to download the Muscle tool (https://www.drive5.com/muscle/)
 ```
-align_seqs.py -i /mnt/research/ShadeLab/WorkingSpace/Stopnisek/core_microbiota/results/zotus.fa -o alignment_zotu -t 97_otus_aligned.fasta
-```
-
-__OTUs__
-```
-align_seqs.py -i /mnt/research/ShadeLab/WorkingSpace/Stopnisek/core_microbiota/results/closed_reference.fasta -o alignment_otu -t 97_otus_aligned.fasta
+/muscle3.8.31_i86linux64 -in /mnt/research/ShadeLab/.../results/full_rep_set.fasta -out /mnt/research/ShadeLab/WorkingSpace/.../results/alignment_otus.fasta -maxiters 2 -diags1
 ```
 
-filter_alignment.py -i alignment_zotu/closed_reference_aligned.fasta -o joined_results/alignment/filtered_alignment
+### Constructing phylogenetic tree using FastTree
+```
+ml icc/2018.1.163-GCC-6.4.0-2.28  impi/2018.1.163
+ml FastTree/2.1.10 
 
-make_phylogeny.py -i joined_results/alignment/filtered_alignment/closed_reference_aligned_pfiltered.fasta -o joined_results/joined_set_otu.tre
-
-
+FastTree -gtr -nt results/alignment_otus.fasta > results/otuTree_fasttree.tre
+```
