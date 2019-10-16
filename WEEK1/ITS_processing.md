@@ -1,3 +1,6 @@
+The workflow is modified from Bonito lab and {Fina's workflow}(https://github.com/ShadeLab/PAPER_Bintarti_2019_Apple/blob/master/ITSgene_SeqWorkflow.md)
+
+
 ## Step 1: Merge PE reads
 ```
 ./usearch64 -fastq_mergepairs /rawreads/*R1*.fastq -reverse /rawreads/*R2*.fastq -fastq_maxdiffs 10 -fastq_minmergelen 50 -relabel @ -fastqout mergedFastq/merged.fastq
@@ -9,20 +12,16 @@ There are few options in USEARCH that allow you to inspect the quality and quali
 ./usearch64 -fastx_info mergedFastq/merged.fq -secs 5 -output stats_fastxinfo_USEARCH_joined.txt
 ```
 
-
-
 ## Step 2: Remove primers
 For amplification of ITS we use EMP recommended primer set.
 
 ```
 cutadapt -g CTTGGTCATTTAGAGGAAGTAA -a GCATCGATGAAGAACGCAGC -f fastq -n 2 --discard-untrimmed --match-read-wildcards -o mergedFastq/cut_merged.fastq mergedFastq/merged.fastq > logFolder/cut_adpt_results.txt
-
 ```
 
 ## Step 3: Filter reads
 ```
 ./usearch64 -fastq_filter cmergedFastq/ut_merged.fastq -fastq_maxee 1 -fastq_trunclen 200 -fastq_maxns 0 -fastaout mergedFastq//filtered_cut_merged.fa -fastqout mergedFastq/filtered_cut_merged.fastq
-
 ```
 
 ## Step 4: Dereplicate sequences
