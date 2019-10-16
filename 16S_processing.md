@@ -47,65 +47,41 @@ The -sizeout option specifies that size annotations should be added to the outpu
 ./usearch64 -sortbysize mergedFastq/uniques_merged.fastq -fastqout mergedFastq/nosig_uniques_merged.fastq -minsize 2
 ```
 
-## Clustering
+## Step 6-7: Clustering and mapping
 
-## Predicting biological sequences = ZOTUs
+### 6.1 Predicting biological sequences = ZOTUs
+```
+./usearch64 -unoise3 mergedFastq/uniques_merged.fastq -zotus results/zotus.fa -tabbedout results/zotus_report.txt 
+```
 
-./usearch64 -unoise3 merged_joined/uniques_combined_merged.fastq -zotus joined_results/zotus_v1.fa -tabbedout joined_results/zotus_report_v1.txt 
+__Importnat!!!__
+Output from the previous command is not compatible with later steps. This is because usearch requires capital letters (and numbers) for the ZOTUs to operate but it generates names as 'Zotu1'
+Run following command:
+```
+sed -i 's/Zotu/ZOTU/g' results/zotus_v1.fa
+```
 
-00:07 1.4Gb   100.0% Reading merged_joined/uniques_combined_merged.fastq
-00:07 1.4Gb     0.0% 0 amplicons, 0 bad (size >= 39785)                 
-WARNING: Shifted sequences detected
-
-00:15 1.7Gb   100.0% 26301 amplicons, 432968 bad (size >= 8) 
-12:33 1.7Gb   100.0% 25990 good, 311 chimeras               
-12:34 1.7Gb   100.0% Writing zotus 
-
-sed -i 's/Zotu/ZOTU/g' joined_results/zotus_v1.fa
-
-###Mapping reads to ZOTUs
+### 7.1 Mapping reads to ZOTUs
+```
 ./usearch64 -otutab merged_joined/merged.fq -zotus joined_results/zotus_v1.fa -uc joined_results/ZOTU_map.uc -otutabout joined_results/ZOTU_table.txt -biomout joined_results/ZOTU_jsn.biom -notmatchedfq ZOTU_unmapped.fq
+```
 
-22:52 78Mb    100.0% Searching merged.fq, 94.1% matched
-5579487 / 5929392 mapped to OTUs (94.1%)
-
-
-#OTU route
+## OTU route
 
 ### Precluster sequences
+```
 ./usearch64 -cluster_fast merged_joined/nosigs_uniques_combined_merged.fastq -centroids_fastq merged_joined/denoised_nosigs_uniques_combined_merged.fastq -id 0.9 -maxdiffs 5 -abskew 10 -sizein -sizeout -sort size
+```
 
-00:04 381Mb   100.0% Reading merged_joined/nosigs_uniques_combined_merged.fastq
-00:04 347Mb  CPU has 20 cores, defaulting to 10 threads                        
+## Reference -based OTU picking (Using Silva database)
+```./usearch64 -usearch_global merged_joined/denoised_nosigs_uniques_combined_merged.fastq -id 0.97 -db /mnt/research/ShadeLab/WorkingSpace/SILVA_128_QIIME_release/rep_set/rep_set_16S_only/97/97_otus_16S.fasta  -strand plus -uc joined_results/ref_seqs.uc -dbmatched joined_results/closed_reference.fasta -notmatchedfq joined_results/failed_closed.fq
+```
 
-WARNING: Max OMP threads 1
-
-00:05 374Mb   100.0% DF
-00:05 385Mb  547673 seqs (tot.size 4208257), 547673 uniques, 0 singletons (0.0%)
-00:05 385Mb  Min size 2, median 2, max 39785, avg 7.68
-00:05 421Mb   100.0% DB
-00:05 428Mb  Sort size... done.
-06:45 651Mb   100.0% 112079 clusters, max size 76484, avg 37.5
-06:45 651Mb   100.0% Writing centroids to merged_joined/denoised_nosigs_uniques_combined_merged.fastq
-                                                                                                     
-      Seqs  547673 (547.7k)
-  Clusters  112079 (112.1k)
-  Max size  76484 (76.5k)
-  Avg size  37.5
-  Min size  2
-Singletons  0, 0.0% of seqs, 0.0% of clusters
-   Max mem  651Mb
-      Time  06:41
-Throughput  1365.8 seqs/sec.
-
-### Reference -based OTU picking (Using Silva database)
-./usearch64 -usearch_global merged_joined/denoised_nosigs_uniques_combined_merged.fastq -id 0.97 -db /mnt/research/ShadeLab/WorkingSpace/SILVA_128_QIIME_release/rep_set/rep_set_16S_only/97/97_otus_16S.fasta  -strand plus -uc joined_results/ref_seqs.uc -dbmatched joined_results/closed_reference.fasta -notmatchedfq joined_results/failed_closed.fq
 
 ### Mapping the closed_reference.fasta to merged.fq (pre-dereplicated sequences) and make OTU table
+```
 ./usearch64 -usearch_global merged_joined/merged.fq -db joined_results/closed_reference.fasta -strand plus -id 0.97 -uc joined_results/OTU_map.uc -otutabout joined_results/OTU_table.txt -biomout joined_results/OTU_jsn.biom
-
-44:04 132Mb   100.0% Searching merged.fq, 84.9% matched
-5035486 / 5929392 mapped to OTUs (84.9%)               
+```              
 
 # Using QIIME to assign taxonomy to the ZOTU/OTU table
 module load QIIME
@@ -153,13 +129,3 @@ filter_alignment.py -i joined_results/alignment/closed_reference_aligned.fasta -
 make_phylogeny.py -i joined_results/alignment/filtered_alignment/closed_reference_aligned_pfiltered.fasta -o joined_results/joined_set_otu.tre
 
 
-
-filter_samples_from_otu_table.py -i joined_results/otu_table_tax_filt.biom -o joined_results/otu_table_no_sverc1.biom -m joined_results/map_v2.txt -s 'sampleID:*,!SVERCc1'
-
-biom summarize-table -i joined_results/otu_table_no_sverc1.biom -o joined_results/otu_table_summary.txt
-
-single_rarefaction.py -d 29622 -o joined_results/single_rare.biom -i joined_results/otu_table_no_sverc1.biom
-
-beta_diversity.py -i joined_results/single_rare.biom -m weighted_unifrac -t joined_results/joined_set_otu.tre -o Beta/
-
-biom convert -i joined_results/otu_table_no_sverc1.biom -o joined_results/otu_table_rarefied.txt -b --table-type='OTU table' --header-key=taxonomy
