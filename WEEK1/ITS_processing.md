@@ -35,19 +35,23 @@ cutadapt -g CTTGGTCATTTAGAGGAAGTAA -a GCATCGATGAAGAACGCAGC -f fastq -n 2 --disca
 ```
 
 ## Step 6: Clustering
+
 ### Step 6.1: Reference-based clustering
+
 ```
 ./usearch64 -usearch_global mergedFastq/nosig_uniques_filtered_cut_merged.fasta -id 0.97 -db /mnt/research/ShadeLab/UNITE_v7.2/sh_refs_qiime_ver7_97_s_01.12.2017.fasta -strand plus -uc results/ref_seqs.uc -dbmatched results/UNITE_reference.fasta -notmatched results/UNITE_failed_closed.fq
 ```
 
 ### Step 6.2: Sorting by size and and de-novo clustering
-````
+
+```
 ./usearch64 -sortbysize results/UNITE_failed_closed.fq -fastaout results/sorted_UNITE_failed_closed.fa
 
 ./usearch64 -cluster_otus results/sorted_UNITE_failed_closed.fa -minsize 2 -otus results/DENOVO_otus.fasta -uparseout results/uparse_otus.txt -relabel OTU_dn_
 ```
 
 Combine the rep sets 
+
 ```
 cat results/UNITE_reference.fasta results/DENOVO_otus.fasta > results/full_rep_set.fna
 ```
@@ -64,10 +68,10 @@ cat results/UNITE_reference.fasta results/DENOVO_otus.fasta > results/full_rep_s
 Please refer to how "Running CONSTAX on the MSU HPCC on lab guru : https://my.labguru.com/knowledge/documents/330
 
 Few things to know:
-- __YOU HAVE TO RUN CONSTAX WITHIN THE OLD CENTOS 6 HPCC SYSTEM!__
-- copy results/full_rep_set.fna into /home/<user>/CONSTAX_hpcc/otus/
-- change the PATH in: mnt/home/<user>/CONSTAX_hpcc/config
-- output directories: outputs, taxonomy_assignments, training_files
-- output file 'home/<user>/CONSTAX_hpcc/outputs/consensus_taxonomy.txt' is the one you use 
+1. __YOU HAVE TO RUN CONSTAX WITHIN THE OLD CENTOS 6 HPCC SYSTEM!__
+2. copy results/full_rep_set.fna into /home/<user>/CONSTAX_hpcc/otus/
+3. change the PATH in: mnt/home/<user>/CONSTAX_hpcc/config
+4. output directories: outputs, taxonomy_assignments, training_files
+5. output file 'home/<user>/CONSTAX_hpcc/outputs/consensus_taxonomy.txt' is the one you use 
 
 
