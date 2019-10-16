@@ -1,4 +1,4 @@
-The workflow is modified from Bonito lab and {Fina's workflow}(https://github.com/ShadeLab/PAPER_Bintarti_2019_Apple/blob/master/ITSgene_SeqWorkflow.md)
+The workflow is modified from Bonito lab and [Fina's workflow](https://github.com/ShadeLab/PAPER_Bintarti_2019_Apple/blob/master/ITSgene_SeqWorkflow.md)
 
 
 ## Step 1: Merge PE reads
