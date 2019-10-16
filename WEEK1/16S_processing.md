@@ -1,4 +1,4 @@
-# Retreive sequences from the RTSF
+## Retreive sequences from the RTSF
 After sequencing is done, RTSF will notify you and send you a quality report file along with password and link to retreive the samples.
 
 You can use FileZilla or any other downloading tools or use the following command on HPCC:
@@ -82,7 +82,6 @@ sed -i 's/Zotu/ZOTU/g' results/zotus_v1.fa
 ```
 
 Combine both results using following command
-
 ```
 cat results/closed_reference.fasta results/denovo_otus.fasta > results/full_rep_set.fasta
 ```
@@ -94,10 +93,13 @@ cat results/closed_reference.fasta results/denovo_otus.fasta > results/full_rep_
 
 ## Step 8: Assign taxonomy
 
-#### USEARCH
-It is possible to assign taxonomy with USEARCH using the sintax command, however the latest compatible version of SILVA is v123.
+#### Using USEARCH
+It is possible to assign taxonomy with USEARCH using the __sintax__ command, however the latest compatible version of SILVA is v123.
 
-### ZOTUs
+#### Using QIIME
+Install QIIME in home directory.
+
+##### ZOTUs
 ```
 assign_taxonomy.py -i results/zotus_v1.fa -o results/taxonomy -r /mnt/research/ShadeLab/WorkingSpace/SILVA_128_QIIME_release/rep_set/rep_set_16S_only/97/97_otus_16S.fasta -t /mnt/research/ShadeLab/WorkingSpace/SILVA_128_QIIME_release/taxonomy/16S_only/97/consensus_taxonomy_7_levels.txt
 
@@ -108,7 +110,7 @@ biom add-metadata -i results/ZOTU_jsn.biom -o results/ZOTU_table_tax.biom --obse
 biom convert -i results/ZOTU_table_tax.biom -o results/zotu_table.txt --header-key taxonomy -b
 ```
 
-### OTUs
+##### OTUs
 ```
 assign_taxonomy.py -i results/closed_reference.fasta -o results/taxonomy_otu -r /mnt/research/ShadeLab/WorkingSpace/SILVA_128_QIIME_release/rep_set/rep_set_16S_only/97/97_otus_16S.fasta -t /mnt/research/ShadeLab/WorkingSpace/SILVA_128_QIIME_release/taxonomy/16S_only/97/consensus_taxonomy_7_levels.txt
 
@@ -123,7 +125,7 @@ biom convert -i results/otu_table_tax_filt.biom -o results/otu_table_joined.txt 
 ## Phylogenetic analysis (needed for UniFrac)
 
 ### Alignments using Muscle
-first you have to download the Muscle tool (https://www.drive5.com/muscle/)
+First you have to download the Muscle tool (https://www.drive5.com/muscle/)
 ```
 /muscle3.8.31_i86linux64 -in /mnt/research/ShadeLab/.../results/full_rep_set.fasta -out /mnt/research/ShadeLab/WorkingSpace/.../results/alignment_otus.fasta -maxiters 2 -diags1
 ```
