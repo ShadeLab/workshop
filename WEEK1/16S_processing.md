@@ -26,7 +26,7 @@ mkdir results
 ## Step 1: Merging and filtering paired end reads
 
 ```
-./usearch64 -fastq_mergepairs /raw_reads/*R1*.fastq -relabel @ -fastq_maxdiffs 10 -fastq_minmergelen 250 -fastq_maxmergelen 300 -fastq_maxee 1 -fastqout /mergedFastq/merged.fq
+./usearch64 -fastq_mergepairs raw_reads/*R1*.fastq -relabel @ -fastq_maxdiffs 10 -fastq_minmergelen 250 -fastq_maxmergelen 300 -fastq_maxee 1 -fastqout /mergedFastq/merged.fq
 ```
 
 ## Step 2: Trim primers 
@@ -38,7 +38,7 @@ cutadapt --discard -a ATTAGAWACCCBDGTAGTCC -a GTGCCAGCMGCCGCGGTAA -o /mergedFast
 
 ## Step 3: Dereplicate (finding unique) sequences 
 ```
-./usearch64 -fastx_uniques /mergedFastq/merged.fq -fastqout mergedFastq/uniques_merged.fastq -sizeout
+./usearch64 -fastx_uniques mergedFastq/merged.fq -fastqout mergedFastq/uniques_merged.fastq -sizeout
 ```
 The -sizeout option specifies that size annotations should be added to the output sequence labels.
 
@@ -68,13 +68,11 @@ sed -i 's/Zotu/ZOTU/g' results/zotus_v1.fa
 
 ## OTU route
 
-
 ###  Step 6.2.1: Reference -based OTU picking (Using Silva database)
 ```
 ./usearch64 -usearch_global mergedFastq/nosigs_uniques_merged.fastq -id 0.97 -db /mnt/research/ShadeLab/WorkingSpace/SILVA_128_QIIME_release/rep_set/rep_set_16S_only/97/97_otus_16S.fasta -strand plus -uc results/ref_seqs.uc -dbmatched results/closed_reference.fasta -notmatched results/failed_closed.fa
 ```
 ###  Step 6.2.2: De novo OTU clustering 
-
 ```
 ./usearch64 -sortbysize results/failed_closed.fa -fastaout results/sorted_failed_closed.fasta
 
@@ -97,7 +95,7 @@ cat results/closed_reference.fasta results/denovo_otus.fasta > results/full_rep_
 It is possible to assign taxonomy with USEARCH using the __sintax__ command, however the latest compatible version of SILVA is v123.
 
 #### Using QIIME
-Install QIIME in home directory.
+Install [QIIME](http://qiime.org/install/install.html) in home directory.
 
 ##### ZOTUs
 ```
