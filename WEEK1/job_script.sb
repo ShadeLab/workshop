@@ -1,0 +1,32 @@
+#!/bin/bash --login
+########## Define Resources Needed with SBATCH Lines ##########
+ 
+#SBATCH --time=4:00:00             	# limit of wall clock time - how long the job will run (same as -t)
+#SBATCH --ntasks=1                  	# number of tasks - how many tasks (nodes) that you require (same as -n)
+#SBATCH --cpus-per-task=1           	# number of CPUs (or cores) per task (same as -c)
+#SBATCH --mem=400G                    	# memory required per node - amount of memory (in bytes)
+#SBATCH --job-name 16S_bean_development	# you can give your job a name for easier identification (same as -J)
+#SBATCH --mail-user=user@msu.edu        # replace with your email address
+#SBATCH --mail-type=BEGIN,END		# will send you email when the job started and ended 
+########## Command Lines to Run ##########
+
+cd /mnt/research/ShadeLab/WorkingSpace/Stopnisek/WorkingDirectory    # change to the directory where your code is located
+ 
+
+# example for mapping
+
+./usearch64 -otutab mergedFastq/merged.fq -zotus results/zotus.fa -uc results/ZOTU_map.uc -otutabout results/ZOTU_table.txt -biomout results/ZOTU_jsn.biom -notmatchedfq results/ZOTU_unmapped.fq
+
+# example for FastQC
+
+module purge
+module load FastQC/0.11.5-Java-1.8.0_162
+
+for file in Seqences/raw_sequences/YOUR_FOLDER/*.fastq
+do
+fastqc -f fastq ${file}
+done
+
+ 
+
+scontrol show job $SLURM_JOB_ID     # write job information to output file

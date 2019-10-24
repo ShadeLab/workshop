@@ -39,7 +39,8 @@ __Remember that file names need to contain R1 and R2 string for USEARCH!__
 If they don't use following command:
 ```
 for f in ./*_1*.fastq
-	do newname=$( echo $f | sed -r 's/_R1/_1/' )
+do 
+	newname=$( echo $f | sed -r 's/_R1/_1/' )
 	mv $f $newname 
 done
 ```
