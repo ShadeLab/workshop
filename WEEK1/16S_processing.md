@@ -43,7 +43,7 @@ for f in ./*_1*.fastq
 	mv $f $newname 
 done
 ```
-Above command will replace _nameID__1__L001.fastq_ to _nameID__R1__L001.fastq_. You would have to do the same for the reverse reds files (R2). 
+Above command will replace nameID__1__L001.fastq to nameID__R1__L001.fastq. You would have to do the same for the reverse reds files (R2). 
 
 ## Check quality of the reads 
 For that purpose use [FastQC](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/) which is available on HPCC.
