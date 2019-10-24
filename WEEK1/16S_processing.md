@@ -8,6 +8,12 @@ wget -r -np -nH --ask- password ftps://shadea@titan.bch.msu.edu/20180420_16S-V4_
 
 The following steps are based on using Illumina PE sequencing platform and USEARCH v10 for read processing.
 
+_Some examples of workflows can be found here_: 
+- [Alan 1](https://github.com/ShadeLab/PAPER_Bowsher_mSystems_2019_16sRatio_CTCstain/blob/master/Bean_Soil_HPCC_Analysis.txt), 
+- [Alan 2](https://github.com/ShadeLab/PAPER_MimulusRecipTransplant_Submitted/blob/master/1%20-%20Sequence%20Analysis/HPCC_analysis.md),
+- [Keara](https://github.com/ShadeLab/PAPER_GradySorensenStopnisek_NatComm_2019/blob/master/Usearch_Workflow.md),
+- [Fina](https://github.com/ShadeLab/PAPER_Bintarti_2019_Apple/blob/master/16SrRNAgene_SeqWorkflow.md)
+
 To use USEARCH you have two options:
 ```
 1. /mnt/research/rdp/public/thirdParty/usearch10.0.240_i86linux64 (PATH to RDP)
@@ -21,6 +27,32 @@ mkdir QC
 mkdir mergedFastq
 mkdir trimmed
 mkdir results
+mkdir raw_reads    #if you copy your reads from the Sequences/raw_sequences/
+```
+
+__Need to unzip the files before running FastQC and USEARCH!__
+```
+gunzip raw_reads/*.gz
+```
+
+__Remember that file names need to contain R1 and R2 string for USEARCH!__
+If they don't use following command:
+```
+
+```
+
+## Check quality of the reads 
+For that purpose use [FastQC](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/) which is available on HPCC.
+
+```
+module purge
+module load FastQC/0.11.5-Java-1.8.0_162
+
+#create a loop to process all raw and unzipped files in the folder where they exist (e.g. Seqences/raw_sequences/YOUR_FOLDER)
+for file in Seqences/raw_sequences/YOUR_FOLDER/*.fastq
+do
+fastqc -f fastq ${file}
+done
 ```
 
 ## Step 1: Merging and filtering paired end reads
@@ -63,7 +95,7 @@ sed -i 's/Zotu/ZOTU/g' results/zotus.fa
 
 ### 7.1 Mapping reads to ZOTUs
 ```
-./usearch64 -otutab mergedFastq/merged.fq -zotus results/zotus.fa -uc results/ZOTU_map.uc -otutabout results/ZOTU_table.txt -biomout results/ZOTU_jsn.biom -notmatchedfq ZOTU_unmapped.fq
+./usearch64 -otutab mergedFastq/merged.fq -zotus results/zotus.fa -uc results/ZOTU_map.uc -otutabout results/ZOTU_table.txt -biomout results/ZOTU_jsn.biom -notmatchedfq results/ZOTU_unmapped.fq
 ```
 
 ## OTU route
