@@ -58,7 +58,7 @@ __Importnat!!!__
 Output from the previous command is not compatible with later steps. This is because usearch requires capital letters (and numbers) for the ZOTUs to operate but it generates names as 'Zotu1'
 Run following command:
 ```
-sed -i 's/Zotu/ZOTU/g' results/zotus_v1.fa
+sed -i 's/Zotu/ZOTU/g' results/zotus.fa
 ```
 
 ### 7.1 Mapping reads to ZOTUs
