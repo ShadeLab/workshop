@@ -33,7 +33,7 @@ mkdir results
 Usually this is not necessary for the 16S rRNA amplicon sequences obtained from the RTSF because they remove the barcodes, primers and PhiX. 
 
 ```
-cutadapt --discard -a ATTAGAWACCCBDGTAGTCC -a GTGCCAGCMGCCGCGGTAA -o /mergedFastq/cut_merged.fq /mergedFastq/merged.fq
+cutadapt --discard -a ATTAGAWACCCBDGTAGTCC -a GTGCCAGCMGCCGCGGTAA -o mergedFastq/cut_merged.fq mergedFastq/merged.fq
 ```
 
 ## Step 3: Dereplicate (finding unique) sequences 
