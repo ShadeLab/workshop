@@ -3,6 +3,9 @@ After sequencing is done, RTSF will notify you and send you a quality report fil
 
 You can use FileZilla or any other downloading tools or use the following command on HPCC:
 ```
+module load GCCcore/6.4.0
+module load wget/1.19.4
+
 wget -r -np -nH --ask- password ftps://shadea@titan.bch.msu.edu/20180420_16S-V4_ITS_PE
 ```
 
@@ -20,7 +23,7 @@ To use USEARCH you have two options:
 2. /mnt/research/ShadeLab/WorkingSpace/usearch64 (copy to your working folder)  
 ```
 
-Creat several folders in your working directory:
+Create several folders in your working directory:
 ```
 mkdir logFiles
 mkdir QC
@@ -56,14 +59,14 @@ module load FastQC/0.11.5-Java-1.8.0_162
 #create a loop to process all raw and unzipped files in the folder where they exist (e.g. Seqences/raw_sequences/YOUR_FOLDER)
 for file in Seqences/raw_sequences/YOUR_FOLDER/*.fastq
 do
-fastqc -f fastq ${file}
+fastqc -f fastq ${file} -o QC/
 done
 ```
 
 ## Step 1: Merging and filtering paired end reads
 
 ```
-./usearch64 -fastq_mergepairs raw_reads/*R1*.fastq -relabel @ -fastq_maxdiffs 10 -fastq_minmergelen 250 -fastq_maxmergelen 300 -fastq_maxee 1 -fastqout /mergedFastq/merged.fq
+./usearch64 -fastq_mergepairs raw_reads/*R1*.fastq -relabel @ -fastq_maxdiffs 10 -fastq_minmergelen 250 -fastq_maxmergelen 300 -fastq_maxee 1 -fastqout mergedFastq/merged.fq
 ```
 
 ## Step 2: Trim primers 
@@ -72,6 +75,7 @@ Usually this is not necessary for the 16S rRNA amplicon sequences obtained from 
 ```
 cutadapt --discard -a ATTAGAWACCCBDGTAGTCC -a GTGCCAGCMGCCGCGGTAA -o mergedFastq/cut_merged.fq mergedFastq/merged.fq
 ```
+If using cutadapt make sure that in the next step the input file is 'cut_merged.fq'!
 
 ## Step 3: Dereplicate (finding unique) sequences 
 ```
