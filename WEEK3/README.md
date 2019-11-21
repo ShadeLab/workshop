@@ -10,3 +10,17 @@
 - https://github.com/metagenome-atlas/atlas
 
 
+## How to retrieve samples?
+
+#### JGI IMG
+![jgi image](jgi.png)
+#### MG-RAST
+
+
+#### NCBI SRA db
+
+
+#### Your 
+
+
+
