@@ -15,12 +15,15 @@
 #### JGI IMG
 ![jgi image](jgi.png)
 #### MG-RAST
-
+![mgrast image](mgrast.png)
 
 #### NCBI SRA db
+![ncbisra image](ncbisra.png)
+
+#### Your own
+![precious image](precious.png)
 
 
-#### Your 
-
+####
 
 
