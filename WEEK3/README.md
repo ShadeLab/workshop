@@ -14,6 +14,7 @@
 
 #### JGI IMG
 ![jgi image](jgi.png)
+
 #### MG-RAST
 ![mgrast image](mgrast.png)
 
@@ -23,8 +24,7 @@
 #### Your own
 ![precious image](precious.png)
 
-
-### Using SRAdb
+##### Using SRAdb
 Download SRA toolkit is required.
 
 Example of job script to download SRA samples:
