@@ -75,7 +75,7 @@ fastq_quality_filter -Q33 -q 30 -p 50 -i combined.fastq -o combined_filtered.fas
 
 extract-paired-reads.py combined_filtered.fastq 
 ```
-This results in two files <combined_filtered.fastq.pe> and combined_filtered.fastq.se. 
+This results in two files 'combined_filtered.fastq.pe' and combined_filtered.fastq.se. 
 
 
 ## Assembly
