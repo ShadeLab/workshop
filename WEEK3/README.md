@@ -60,4 +60,49 @@ done
 scontrol show job $SLURM_JOB_ID     ### write job information to output file
 ```
 
-Check also John Quensen's tutorial for downloading samples from SRA ([LINK](http://john-quensen.com/tutorials/downloading-sequences-from-ncbis-sra/))
+Check also John Quensen's tutorial for downloading samples from SRA ([LINK](http://john-quensen.com/tutorials/downloading-sequences-from-ncbis-sra/)).
+
+## Trimming and read QC
+
+
+## Assembly
+Many assembly tools are available, each with some pros and cons Overall   
+
+
+#### Megahit
+```
+module spider MEGAHIT/1.2.4
+
+megahot
+```
+#### SPAdes
+
+SPAdes takes as input paired-end reads, mate-pairs and single (unpaired) reads in FASTA and FASTQ. 
+
+```
+ml GCC/5.4.0-2.26  OpenMPI/1.10.3
+module load SPAdes/3.13.0
+
+spades.py --meta --12 <file_name> -o <output_dir> -t 64 -k 21,33,55,77,99,127
+```
+<output_dir>/scaffolds.fasta contains resulting scaffolds (recommended for use as resulting sequences)
+
+
+#### [IDBA-UD](https://github.com/loneknightpy/idba)
+Requires use of FASTA files. 
+__IMPORTANT__: IDBA assemblers are designed for short reads (around 100bp). If you want to assemble paired-end reads with longer read length, please modify the constant kMaxShortSequence in src/sequence/short_sequence.h to support longer read length.
+
+```
+ml GCC/6.4.0-2.28
+ml IDBAUD/1.1.0
+
+# can be also installed through conda: conda install -c bioconda idba
+
+
+```
+
+
+#### MASURCA
+
+#### Investigating assembly statistics
+
