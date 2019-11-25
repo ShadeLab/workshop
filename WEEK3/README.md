@@ -12,7 +12,8 @@
 
 ## How to retrieve samples?
 
-#### JGI IMG
+#### (JGI IMG)[https://img.jgi.doe.gov/]
+
 ![jgi image](jgi.png)
 
 #### MG-RAST
@@ -25,6 +26,7 @@
 ![precious image](precious.png)
 
 ##### Using SRAdb
+
 Download SRA toolkit is required.
 
 Example of job script to download SRA samples:
