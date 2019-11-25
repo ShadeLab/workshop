@@ -16,18 +16,19 @@
 
 ![jgi image](jgi.png)
 
-#### (MG-RAST)[]
+#### [MG-RAST](https://www.mg-rast.org/)
 ![mgrast image](mgrast.png)
 
-#### NCBI SRA db
+#### [NCBI SRA db](https://www.ncbi.nlm.nih.gov/sra)
 ![ncbisra image](ncbisra.png)
 
 #### Your own
 ![precious image](precious.png)
 
+
 ##### Using SRAdb
 
-Download SRA toolkit is required.
+Download [SRA toolkit](https://trace.ncbi.nlm.nih.gov/Traces/sra/sra.cgi?view=software) is required.
 
 Example of job script to download SRA samples:
 ```
