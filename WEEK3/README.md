@@ -75,7 +75,7 @@ fastq_quality_filter -Q33 -q 30 -p 50 -i combined.fastq -o combined_filtered.fas
 
 extract-paired-reads.py combined_filtered.fastq 
 ```
-This results in two files 'combined_filtered.fastq.pe' and combined_filtered.fastq.se. 
+This results in two files _combined_filtered.fastq.pe_ and _combined_filtered.fastq.se_. 
 
 
 ## Assembly
@@ -96,7 +96,7 @@ SPAdes takes as input paired-end reads, mate-pairs and single (unpaired) reads i
 ml GCC/5.4.0-2.26  OpenMPI/1.10.3
 module load SPAdes/3.13.0
 
-spades.py --meta --12 <file_name> -o <output_dir> -t 64 -k 21,33,55,77,99,127
+spades.py --meta --12 <file_name> -o <output_dir> -t 64 -k 21,33,55,77,99,127 -m 600
 ```
 <output_dir>/scaffolds.fasta contains resulting scaffolds (recommended for use as resulting sequences)
 
@@ -108,14 +108,18 @@ __IMPORTANT__: IDBA assemblers are designed for short reads (around 100bp). If y
 ```
 ml GCC/6.4.0-2.28
 ml IDBAUD/1.1.0
-
 # can be also installed through conda: conda install -c bioconda idba
 
+idba_ud -r <file_name> --num_threads 64 -o idba_ud_out
 ```
-
-#### MASURCA
+The contig sequences are located in file _contig.fa_.
 
 ### Investigating assembly statistics
 
 [MetaQuast](http://quast.sourceforge.net/metaquast.html) is commonly used tool to assess the assembly quality.
 You can download it throuugh conda ('conda install -c bioconda quast') or just find it on HPCC ('module spider quast'). 
+
+
+```
+
+```
