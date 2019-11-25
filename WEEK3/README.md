@@ -74,8 +74,9 @@ module load fastx
 fastq_quality_filter -Q33 -q 30 -p 50 -i combined.fastq -o combined_filtered.fastq
 
 extract-paired-reads.py combined_filtered.fastq 
-# This results in two files <combined_filtered.fastq.pe> and combined_filtered.fastq.se. 
 ```
+This results in two files <combined_filtered.fastq.pe> and combined_filtered.fastq.se. 
+
 
 ## Assembly
 Many assembly tools are available, each with some pros and cons. Overall, Megahit is the most commonly used tool as of now, mainly due to low computational power requerements and speed. However, other tools might be worth to use and compare. SPAdes offers additional option and can assemble also plasmids.    
