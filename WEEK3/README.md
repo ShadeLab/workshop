@@ -64,10 +64,21 @@ Check also John Quensen's tutorial for downloading samples from SRA ([LINK](http
 
 ## Trimming and read QC
 
+```
+module load GNU/4.8.2
+module load khmer/2.0
+
+interleave-reads.py /path/to/files/file_name_R* > combined.fastq
+
+module load fastx
+fastq_quality_filter -Q33 -q 30 -p 50 -i combined.fastq -o combined_filtered.fastq
+
+extract-paired-reads.py combined_filtered.fastq 
+# This results in two files <combined_filtered.fastq.pe> and combined_filtered.fastq.se. 
+```
 
 ## Assembly
-Many assembly tools are available, each with some pros and cons Overall   
-
+Many assembly tools are available, each with some pros and cons. Overall, Megahit is the most commonly used tool as of now, mainly due to low computational power requerements and speed. However, other tools might be worth to use and compare. SPAdes offers additional option and can assemble also plasmids.    
 
 #### [Megahit](https://github.com/voutcn/megahit)
 
