@@ -60,4 +60,4 @@ done
 scontrol show job $SLURM_JOB_ID     ### write job information to output file
 ```
 
-
+Check also John Quensen's tutorial for downloading samples from SRA ([LINK](http://john-quensen.com/tutorials/downloading-sequences-from-ncbis-sra/))
