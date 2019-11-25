@@ -12,11 +12,11 @@
 
 ## How to retrieve samples?
 
-#### (JGI IMG)[https://img.jgi.doe.gov/]
+#### [JGI IMG](https://img.jgi.doe.gov/)
 
 ![jgi image](jgi.png)
 
-#### MG-RAST
+#### (MG-RAST)[]
 ![mgrast image](mgrast.png)
 
 #### NCBI SRA db
