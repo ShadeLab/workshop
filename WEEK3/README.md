@@ -69,13 +69,14 @@ Check also John Quensen's tutorial for downloading samples from SRA ([LINK](http
 Many assembly tools are available, each with some pros and cons Overall   
 
 
-#### Megahit
+#### [Megahit](https://github.com/voutcn/megahit)
+
 ```
 module spider MEGAHIT/1.2.4
 
-megahot
+megahit --12 <file_name> -o <output_dir> --k-list 21,39,59,79,99,141,255 -t 64
 ```
-#### SPAdes
+#### [SPAdes](https://github.com/ablab/spades)
 
 SPAdes takes as input paired-end reads, mate-pairs and single (unpaired) reads in FASTA and FASTQ. 
 
@@ -98,11 +99,11 @@ ml IDBAUD/1.1.0
 
 # can be also installed through conda: conda install -c bioconda idba
 
-
 ```
-
 
 #### MASURCA
 
-#### Investigating assembly statistics
+### Investigating assembly statistics
 
+[MetaQuast](http://quast.sourceforge.net/metaquast.html) is commonly used tool to assess the assembly quality.
+You can download it throuugh conda ('conda install -c bioconda quast') or just find it on HPCC ('module spider quast'). 
