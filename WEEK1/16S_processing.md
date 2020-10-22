@@ -2,11 +2,13 @@
 After sequencing is done, RTSF will notify you and send you a quality report file along with password and link to retreive the samples.
 
 You can use FileZilla or any other downloading tools or use the following command on HPCC:
-```
-module load GCCcore/6.4.0
-module load wget/1.19.4
 
-wget -r -np -nH --ask- password ftps://shadea@titan.bch.msu.edu/20180420_16S-V4_ITS_PE
+First login  with `ssh <MSUNetID>@rsync.hpcc.msu.edu`
+Without ssh into any node do following:
+```
+module load GCCcore/6.4.0 wget/1.19.4
+
+wget -r -np -nH --ask-password ftps://shadea@titan.bch.msu.edu/20180420_16S-V4_ITS_PE
 ```
 
 The following steps are based on using Illumina PE sequencing platform and USEARCH v10 for read processing.
